@@ -138,18 +138,39 @@ class _HomeScreenState extends State<HomeScreen> {
            child: Text('ข่าวประกาศล่าสุด', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
          ),
          Container(
-           height: MediaQuery.of(context).size.height * 0.25,
+           height: MediaQuery.of(context).size.height * 0.28,
            child: ListView.builder(
            scrollDirection: Axis.horizontal,
-           itemCount: numbers.length, itemBuilder: (context, index) {
+           itemCount: numbers.length, 
+           itemBuilder: (context, index) {
               return Container(
                 width: MediaQuery.of(context).size.width * 0.6,
-                child: Card(
-                  color: Colors.green,
+                child: InkWell(
+                  onTap: () { },
+                  child: Card(
+                  // color: Colors.green,
                   child: Container(
-                    child: Center(child: Text(numbers[index].toString(), style: TextStyle(color: Colors.white, fontSize: 36.0),)),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/newcover.jpg"),
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('หัวเรื่องข่าวสาร', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
+                          Text('รายละเอียดของข่าวสาร')
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+                  ),
               );
             }
           ),
