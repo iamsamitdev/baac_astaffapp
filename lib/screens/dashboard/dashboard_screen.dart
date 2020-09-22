@@ -19,7 +19,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   SharedPreferences sharedPreferences;
 
   // สร้างตัวแปร ไว้เก็บชื่อและอีเมล์ผู้ใช้
-  String fullnameAccount, empIDAccount;
+  String fullnameAccount, empIDAccount, avatarURL;
 
   // สร้างตัวแปร List เก็บรายการหน้าที่ต้องการเปลี่ยนใน Bottom Navigationbar
   int _currentIndex = 0;
@@ -39,6 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() {
       fullnameAccount = sharedPreferences.getString('storePrename') + sharedPreferences.getString('storeFirstname')+" "+sharedPreferences.getString('storeLastname');
       empIDAccount = sharedPreferences.getString('storeEmpID');
+      avatarURL = sharedPreferences.getString('storeAvatar');
     });
     
   }
@@ -96,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 currentAccountPicture: GestureDetector(
                   onTap: () { },
                   child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/avatar.jpg')
+                    backgroundImage: NetworkImage('$avatarURL')
                   ),
                 ),
                 accountName: Text('$fullnameAccount'), 

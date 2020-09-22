@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'package:baacstaff/utils/utility.dart';
 import 'package:baacstaff/services/rest_api.dart';
+import 'package:flutter/services.dart';
+import 'package:get_mac/get_mac.dart';
+import 'package:imei_plugin/imei_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Register extends StatefulWidget {
@@ -23,26 +26,37 @@ class _RegisterState extends State<Register> {
   // สร้างตัวแปรไว้รับค่าจากฟอร์ม
   String empID, cizID;
 
-  // Alert Dialog
-  // _showDialog(title, text) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: Text(title),
-  //         content: Text(text),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: Text('Ok'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           )
-  //         ],
-  //       );
-  //     }
-  //   );
-  // }
+  // สร้างตัวแปรไว้เก็บค่า IMEI และ MacAddress ของเครื่อง
+  String _imeiNumber;
+  String _macAddress;
+
+  // ฟังก์ชันอ่านข้อมูล IMEI และ Mac Address
+  Future<void> initPlatformState() async {
+    String imeiNumber = "Unknown";
+    String macAddress = "Unknown";
+    
+    try{
+      imeiNumber = await ImeiPlugin
+                  .getImei(shouldShowRequestPermissionRationale: false);
+      macAddress = await GetMac.macAddress;
+    }on PlatformException{
+      macAddress = "Faild to get Device MAC Address";
+    }
+
+    if(!mounted) return;
+
+    setState(() {
+      _imeiNumber = imeiNumber;
+      _macAddress = macAddress;
+    });
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,15 +229,21 @@ class _RegisterState extends State<Register> {
       if(body['code']=='200'){
 
         // การสร้างตัวแปรเก็บลง sharedPreferences
-        sharedPreferences.setString('storeEmpID', body['data']['empid']);
+        sharedPreferences.setString('storeIMEI', _imeiNumber); // เก็บ EMEI 
+        sharedPreferences.setString('storeMac', _macAddress); // เก็บ MacAddress 
+        sharedPreferences.setString('storeEmpID', body['data']['empid']); // รหัสพนักงาน
+        sharedPreferences.setString('storeCizID', body['data']['cizid']); // บัตรประชาชน
         sharedPreferences.setString('storePrename', body['data']['prename']);
         sharedPreferences.setString('storeFirstname', body['data']['firstname']);
         sharedPreferences.setString('storeLastname', body['data']['lastname']);
+        sharedPreferences.setString('storePosition', body['data']['position']);
+        sharedPreferences.setString('storeAvatar', body['data']['avatar']);
         sharedPreferences.setInt('storeStep', 1);
+
         Navigator.pushReplacementNamed(context, '/consent');
 
       }else{
-        Utility.getInstance().showAlertDialog(context, 'มีข้อผิดพลาด', 'ข้อมูลที่ใช้ลงทะเบียนไม่ถูกต้อง ลองใหม่','ตกลง');
+        Utility.getInstance().showAlertDialog(context, 'มีข้อผิดพลาด', 'ข้อมูลที่ใช้ลงทะเบียนไม่ถูกต้อง','ตกลง');
       }
 
     }

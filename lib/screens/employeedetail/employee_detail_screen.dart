@@ -3,7 +3,7 @@ import 'package:baacstaff/services/rest_api.dart';
 import 'package:baacstaff/utils/utility.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EmployeeDetailScreen extends StatefulWidget {
   EmployeeDetailScreen({Key key}) : super(key: key);
@@ -13,6 +13,12 @@ class EmployeeDetailScreen extends StatefulWidget {
 }
 
 class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
+
+  // เรียกใช้ตัวแปร SharedPrefference
+  SharedPreferences sharedPreferences;
+
+  // ตัวแปรไว้ทดสอบอ่าน IMEI และ MAC Address
+  String _getIMEI, _getMacAddress;
 
   // เรียกใช้ Model RegisterModel
   RegisterModel _dataEmployee;
@@ -33,9 +39,14 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
       Utility.getInstance()
       .showAlertDialog(context, 'ออฟไลน์', 'คุณยังไม่ได้เชื่อมต่ออินเตอร์เน็ต');
     }else{
+      sharedPreferences = await SharedPreferences.getInstance();
+      // อ่านข้อมูลจาก sharedPreferences ลงตัวแปร
+      _getIMEI = sharedPreferences.getString('storeIMEI').toString();
+      _getMacAddress = sharedPreferences.getString('storeMac').toString();
+
       var empData = {
-        "empid":"5601965",
-        "cizid":"7127225663620"
+        "empid": sharedPreferences.getString('storeEmpID').toString(),
+        "cizid": sharedPreferences.getString('storeCizID').toString()
       };
       try{
         var response = await CallAPI().getEmployee(empData);
@@ -106,6 +117,16 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> {
             leading: Icon(Icons.home),
             title: Text('ที่อยู่'),
             subtitle: Text('${_dataEmployee?.data?.address ?? "..."}'),
+          ),
+          ListTile(
+            leading: Icon(Icons.mobile_screen_share),
+            title: Text('IMEI'),
+            subtitle: Text('${_getIMEI ?? "..."}'),
+          ),
+          ListTile(
+            leading: Icon(Icons.mobile_screen_share),
+            title: Text('Mac Address'),
+            subtitle: Text('${_getMacAddress ?? "..."}'),
           ),
         ],
       ),

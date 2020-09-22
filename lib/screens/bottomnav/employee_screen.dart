@@ -15,11 +15,35 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   // สร้าง Object SharedPreferences 
   SharedPreferences sharedPreferences;
 
+  String _empID, _fullname, _position, _avatar;
+
+  // Get Profile form sharepreference
+  getProfile() async {
+
+    sharedPreferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      _empID = sharedPreferences.getString('storeEmpID');
+      _fullname = sharedPreferences.getString('storePrename') + sharedPreferences.getString('storeFirstname')+" "+sharedPreferences.getString('storeLastname');
+      _position = sharedPreferences.getString('storePosition');
+      _avatar = sharedPreferences.getString('storeAvatar');
+    
+    });
+
+  }
+
   // Sign out
   signOut() async {
     sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setInt('storeStep', 4);
     Navigator.pushReplacementNamed(context, '/lockscreen');
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    getProfile();
   }
 
   @override
@@ -45,20 +69,20 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                    backgroundColor: Color(0xffffffff),
                    child: CircleAvatar(
                      radius: 46,
-                     backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                     backgroundImage: NetworkImage('$_avatar')
                    ),
                  ),
                  SizedBox(height: 10,),
                  Text(
-                   'นาย สามิตร โกยม',
+                   '$_fullname',
                    style: TextStyle(fontSize: 24, color: Colors.white),
                  ),
                  Text(
-                   'รหัสพนักงาน 5671985',
+                   'รหัสพนักงาน $_empID',
                    style: TextStyle(fontSize: 20, color: Colors.white),
                  ),
                  Text(
-                   'พนักงานระบบคอมพิวเตอร์ 7',
+                   '$_position',
                    style: TextStyle(fontSize: 16, color: Colors.white),
                  )
                ],

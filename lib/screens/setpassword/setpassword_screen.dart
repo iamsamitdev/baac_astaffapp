@@ -87,7 +87,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     if(formKey.currentState.validate()){
                       formKey.currentState.save();
                       if(_password != _passwordConfirmed){
-                        Utility.getInstance().showAlertDialog(context, 'มีข้อผิดพลาด', 'ยืนยันรหัสทั้ง 2 ช่องไม่ตรงกัน ลองใหม่','ตกลง');
+                        Utility.getInstance().showAlertDialog(context, 'มีข้อผิดพลาด', 'ยืนยันรหัสทั้ง 2 ช่องไม่ตรงกัน','ตกลง');
                       }else{
                         _setPasswordSubmit(context);
                       }
