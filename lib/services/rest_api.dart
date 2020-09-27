@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+import 'package:baacstaff/models/BaacMapBranch.dart';
 import 'package:baacstaff/models/NewsModel.dart';
 import 'package:baacstaff/models/TimeDetailModel.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 import 'package:baacstaff/models/RegisterModel.dart';
 
@@ -46,14 +47,20 @@ class CallAPI {
 
   // Read News
   Future<List<NewsModel>> getNews() async{
-    final response = await http.get(
-      baseAPIURL+'news',
-      headers: _setHeaders()
-    );
-    if(response.body != null){
-      return newsModelFromJson(response.body);
-    }else{
+    var result = await Connectivity().checkConnectivity();
+    
+    if (result == ConnectivityResult.none) {
       return null;
+    }else{
+      final response = await http.get(
+        baseAPIURL+'news',
+        headers: _setHeaders()
+      );
+      if(response.body != null){
+        return newsModelFromJson(response.body);
+      }else{
+        return null;
+      }
     }
   }
 
@@ -70,16 +77,41 @@ class CallAPI {
 
   // Read Time Detail
   Future<List<TimeDetailModel>> getTimeDetail() async{
-    final response = await http.get(
-      baseAPIURL+'timeDetail',
-      headers: _setBAACHeaders()
-    );
-    if(response.body != null){
-      return timeDetailModelFromJson(response.body);
-    }else{
+    var result = await Connectivity().checkConnectivity();
+    
+    if (result == ConnectivityResult.none) {
       return null;
+    }else{
+      final response = await http.get(
+        baseAPIURL+'timeDetail',
+        headers: _setBAACHeaders()
+      );
+      if(response.body != null){
+        return timeDetailModelFromJson(response.body);
+      }else{
+        return null;
+      }
     }
   }
-  
 
+  // Read BAAC Location branch
+  Future<BaacMapBranch> getBAACBranch() async {
+
+    var result = await Connectivity().checkConnectivity();
+    
+    if (result == ConnectivityResult.none) {
+      return null;
+    }else{
+      final response = await http.get(
+        baseAPIURL+'baacbranch',
+        headers: _setHeaders()
+      );
+      if(response.body != null){
+        return baacMapBranchFromJson(response.body);
+      }else{
+        return null;
+      }
+    }  
+
+  }
 }

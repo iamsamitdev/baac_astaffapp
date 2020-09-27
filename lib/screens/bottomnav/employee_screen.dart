@@ -67,10 +67,11 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                  CircleAvatar(
                    radius: 50,
                    backgroundColor: Color(0xffffffff),
-                   child: CircleAvatar(
+                   child: _avatar != null ? CircleAvatar(
                      radius: 46,
-                     backgroundImage: NetworkImage('$_avatar')
-                   ),
+                    //  backgroundImage: NetworkImage('$_avatar')
+                     backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                   ):CircularProgressIndicator(),
                  ),
                  SizedBox(height: 10,),
                  Text(

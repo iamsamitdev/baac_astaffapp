@@ -97,7 +97,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 currentAccountPicture: GestureDetector(
                   onTap: () { },
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage('$avatarURL')
+                    // backgroundImage: NetworkImage('$avatarURL')
+                    backgroundImage: AssetImage('assets/images/avatar.jpg'),
                   ),
                 ),
                 accountName: Text('$fullnameAccount'), 
@@ -145,6 +146,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.pin_drop),
+                title: Text('พื้นที่ให้บริการ'),
+                onTap: (){ 
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/servicemap');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo),
+                title: Text('ถ่ายภาพและอัพโหลด'),
+                onTap: (){ 
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/camera_and_upload');
+                },
+              ),
               Divider(color: Colors.green[200],),
               ListTile(
                 leading: Icon(Icons.exit_to_app),
@@ -166,7 +183,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         )
       ),
 
-      body: _children[_currentIndex],
+      body:_children[_currentIndex],
 
     // Bottom Navigationbar
      bottomNavigationBar: BottomNavigationBar(
@@ -184,4 +201,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     );
   }
+  
 }

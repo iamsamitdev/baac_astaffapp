@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   SharedPreferences sharedPreferences;
   String _fullnameAccount, _avatar;
 
@@ -152,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(children: [
+      body:ListView(children: [
         Container(
           width: double.infinity,
           height: 120.0,
@@ -172,9 +173,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CircleAvatar(
                         radius: 32,
                         backgroundColor: Color(0xffffffff),
-                        child: CircleAvatar(
+                        child: _avatar != null ? CircleAvatar(
                             radius: 28,
-                            backgroundImage: NetworkImage('$_avatar')),
+                            // backgroundImage: NetworkImage('$_avatar')
+                            backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                        ): CircularProgressIndicator(),
                       ),
                     ),
                     Expanded(
@@ -226,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height * 0.28,
+          height: MediaQuery.of(context).size.height * 0.30,
           child: FutureBuilder(
               future: CallAPI().getNews(),
               builder: (BuildContext context,
@@ -272,7 +275,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               }),
         ),
-      ]),
+      ]
+    ),
     );
   }
 
@@ -295,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      newsModel.imageurl != null ? Container(
                           height: 125.0,
                           decoration: BoxDecoration(
                               image: DecorationImage(
@@ -303,7 +307,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     newsModel.imageurl,
                                   ),
                                   fit: BoxFit.fitHeight,
-                                  alignment: Alignment.topCenter))),
+                                  alignment: Alignment.topCenter)
+                        )
+                      ): CircularProgressIndicator(),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -348,4 +354,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
+
+
 }
