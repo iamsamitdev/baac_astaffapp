@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:baacstaff/models/BaacMapBranch.dart';
+import 'package:baacstaff/models/BaacTimeDetailModel.dart';
 import 'package:baacstaff/models/NewsModel.dart';
 import 'package:baacstaff/models/TimeDetailModel.dart';
 import 'package:connectivity/connectivity.dart';
@@ -20,6 +21,7 @@ class CallAPI {
   
   final String baseAPIURL = 'https://www.itgenius.co.th/sandbox_api/baacstaffapi/public/api/';
   final String baseURLBAAC = 'https://dinodev.baac.or.th/wsBEM/';
+  final String baseURLBAACV2 = 'https://dinodev.baac.or.th/wsBEMV2/';
 
   // Register API
   postData(data, apiURL) async {
@@ -112,6 +114,23 @@ class CallAPI {
         return null;
       }
     }  
+  }
+
+
+  // BAAC Post Time Detail
+  Future<List<BaacTimeDetailModel>> baacPostTimeDetail(data) async {
+
+    final response = await http.post(
+      baseURLBAACV2+'TimeDetail', 
+      body: data,
+      headers: _setBAACHeaders(),
+      encoding: Encoding.getByName("utf-8")
+    );
+    if(response.statusCode == 200){
+      return baacTimeDetailModelFromJson(response.body);
+    }else{
+      return null;
+    }
 
   }
 }

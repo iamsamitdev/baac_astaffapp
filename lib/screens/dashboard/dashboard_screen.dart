@@ -24,11 +24,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // สร้างตัวแปร List เก็บรายการหน้าที่ต้องการเปลี่ยนใน Bottom Navigationbar
   int _currentIndex = 0;
   String _title;
+  Widget _actionWidget;
 
   @override
   void initState() { 
     super.initState();
     _title = 'หน้าหลัก';
+    _actionWidget = _homeActionBar();
     // ตรวจข้อมูล sharedPreferences ของผู้ใช้
     checkLoginStatus();
   }
@@ -59,6 +61,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
     EmployeeScreen()
   ];
 
+  // สร้าง Widget action on appbar แยกแต่ละหน้า
+  Widget _homeActionBar() {
+     return InkWell(
+      onTap: (){
+      Navigator.pushNamed(context, '/barcodescan');
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 16),
+        child: Row(
+          children: [
+            Icon(Icons.photo_camera),
+            Text(' SCAN')
+          ],
+        )
+      )
+    );
+  }
+
+  Widget _checkInActionBar() {
+      return FlatButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/checkin');
+      },
+      child: Row(
+        children: [
+          Icon(Icons.pin_drop, color: Colors.white,),
+          Text(
+            "ลงเวลา",
+            style: TextStyle(color: Colors.white, fontSize: 16.0),
+          ),
+        ],
+      )
+    );
+  }
+
   // สร้าง method สำหรับการเปลี่ยนหน้า
   void onTabTapped(int index){
     setState(() {
@@ -66,14 +103,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       switch (index) {
         case 0: _title = 'หน้าหลัก';
+          _actionWidget = _homeActionBar();
           break;
         case 1: _title = 'สวัสดิการ';
+          _actionWidget = Container();
           break;
         case 2: _title = 'กองทุนกู้ยืมเพื่อสวัสดิการ';
+          _actionWidget = Container();
           break;
         case 3: _title = 'ลงเวลาเข้าออกงาน'; 
+          _actionWidget = _checkInActionBar();
           break;
         case 4: _title = 'ข้อมูลของฉัน'; 
+          _actionWidget = Container();
           break;
       }
 
@@ -86,6 +128,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         // automaticallyImplyLeading: false,
         title: Text(_title),
+         actions: <Widget>[
+          _actionWidget
+        ],
       ),
 
       // ส่วนของ Drawer Menu
@@ -141,9 +186,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
                ListTile(
                 leading: Icon(Icons.timelapse),
-                title: Text('ลงเวลาทำงาน'),
+                title: Text('ข้อมูลลงเวลาทำงาน'),
                 onTap: (){ 
                   Navigator.pop(context);
+                  Navigator.pushNamed(context, '/showtimedetail');
                 },
               ),
               ListTile(

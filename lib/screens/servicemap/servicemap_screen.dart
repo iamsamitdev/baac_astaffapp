@@ -94,7 +94,7 @@ class _ServiceMapScreenState extends State<ServiceMapScreen> {
         markers: Set<Marker>.of(markers.values),
         initialCameraPosition: CameraPosition(
           target: latlng, 
-          zoom: 15.0
+          zoom: 14.0
         ),
         mapType: MapType.normal,
         onMapCreated: _onMapCreated,
